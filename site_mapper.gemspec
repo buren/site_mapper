@@ -9,23 +9,24 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jacob Burenstam']
   spec.email         = ['burenstam@gmail.com']
 
-  spec.summary       = %q{Find all links on domain}
-  spec.description   = %q{Find all links on domain.}
+  spec.summary       = %q{Find all links on domain to domain}
+  spec.description   = %q{Find all links on domain to domain.}
   spec.homepage      = 'https://github.com/buren/site_mapper'
   spec.license       = 'MIT'
 
-  spec.required_ruby_version = '>= 1.9.3'
-
-  spec.add_runtime_dependency 'nokogiri'
-  spec.add_runtime_dependency 'url_resolver'
   spec.files         = Dir.glob("{bin,lib}/**/*")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.3'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'yard'
-  spec.add_development_dependency 'coveralls'
+  spec.required_ruby_version = '>= 1.9.3'
+
+  spec.add_runtime_dependency 'nokogiri',      '~> 1.6'
+  spec.add_runtime_dependency 'url_resolver',  '~> 0.1'
+
+  spec.add_development_dependency 'bundler',   '~> 1.3'
+  spec.add_development_dependency 'rake',      '~> 10.3'
+  spec.add_development_dependency 'rspec',     '~> 3.1'
+  spec.add_development_dependency 'yard',      '~> 0.8'
+  spec.add_development_dependency 'coveralls', '~> 0.7'
 end
