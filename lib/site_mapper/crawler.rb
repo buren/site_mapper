@@ -36,7 +36,7 @@ module SiteMapper
       @fetch_queue << @crawl_url.resolved_base_url
       until @fetch_queue.empty?
         url = @fetch_queue.pop
-        Thread.new { yield(url) if block_given? }
+        yield(url)
         page_links(url)
       end
       puts "Crawling finished, #{@processed.length} links found"
