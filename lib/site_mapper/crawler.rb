@@ -12,9 +12,8 @@ module SiteMapper
       base_url     = Request.resolve_url(url)
       @options     = { resolve: resolve }
       @crawl_url   = CrawlUrl.new(base_url)
-      @fetch_queue = Set.new
+      @fetch_queue = CrawlQueue.new
       @processed   = Set.new
-      @fetch_queue << @crawl_url.resolved_base_url
     end
 
     # @see #collect_urls
@@ -27,15 +26,15 @@ module SiteMapper
     # @example URLs for example.com
     #   crawler = Crawler.new('example.com')
     #   crawler.collect_urls
-    # @example URLs for example.com with block
+    # @example URLs for example.com with block (executes in its own thread)
     #   crawler = Crawler.new('example.com')
     #   crawler.collect_urls do |new_url|
     #     puts "New URL found: #{new_url}"
     #   end
     def collect_urls
+      @fetch_queue << @crawl_url.resolved_base_url
       until @fetch_queue.empty?
-        url = @fetch_queue.first
-        @fetch_queue.delete(@fetch_queue.first)
+        url = @fetch_queue.pop
         Thread.new { yield(url) if block_given? }
         page_links(url)
       end
@@ -63,6 +62,20 @@ module SiteMapper
 
     def resolve(url)
       @options[:resolve] ? Request.resolve_url(url) : url
+    end
+  end
+
+  class CrawlQueue
+    def self.new
+      Set.new.extend(EnumerablePop)
+    end
+    
+    module EnumerablePop
+      def pop
+        first_element = first
+        delete(first_element)
+        first_element
+      end
     end
   end
 end
