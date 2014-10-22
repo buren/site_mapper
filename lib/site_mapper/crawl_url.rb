@@ -4,7 +4,7 @@ module SiteMapper
     attr_reader :resolved_base_url, :base_hostname
 
     def initialize(base_url)
-      @resolved_base_url = Request.resolve_url(base_url)
+      @resolved_base_url = Request.resolve_url(base_url, with_query: false)
       @base_hostname     = URI.parse(@resolved_base_url).hostname
       @resolved_base_url.prepend('http://') unless @resolved_base_url.start_with?('http')
     end

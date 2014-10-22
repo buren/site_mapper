@@ -21,8 +21,15 @@ module SiteMapper
         http.request(request)
       end
 
-      def resolve_url(url)
-        UrlResolver.resolve(url)
+      def resolve_url(url, with_query: true)
+        resolved = UrlResolver.resolve(url)
+        resolved = remove_query(resolved) unless with_query
+        resolved
+      end
+
+      def remove_query(url)
+        index = url.index('?')
+        index.nil? ? url : url[0...index]
       end
     end
   end
