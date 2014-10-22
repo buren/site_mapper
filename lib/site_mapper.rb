@@ -3,6 +3,7 @@ require 'net/http'
 
 require 'site_mapper/version'
 require 'site_mapper/request'
+require 'site_mapper/robots'
 require 'site_mapper/crawler'
 require 'site_mapper/crawl_url'
 

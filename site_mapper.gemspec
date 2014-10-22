@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jacob Burenstam']
   spec.email         = ['burenstam@gmail.com']
 
-  spec.summary       = %q{Find all links on domain to domain}
-  spec.description   = %q{Find all links on domain to domain.}
+  spec.summary       = %q{Map all links on a given site.}
+  spec.description   = %q{Map all links on a given site.}
   spec.homepage      = 'https://github.com/buren/site_mapper'
   spec.license       = 'MIT'
 

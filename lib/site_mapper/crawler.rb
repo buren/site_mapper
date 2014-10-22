@@ -8,12 +8,13 @@ module SiteMapper
       'User-Agent' => "SiteMapper/#{SiteMapper::VERSION} (+#{CRAWLER_INFO_LINK})"
     }
 
-    def initialize(url, resolve = false)
+    def initialize(url, resolve: false)
       base_url     = Request.resolve_url(url)
       @options     = { resolve: resolve }
       @crawl_url   = CrawlUrl.new(base_url)
       @fetch_queue = CrawlQueue.new
       @processed   = Set.new
+      @robots      = Robots.new(base_url, HEADERS_HASH['User-Agent'])
     end
 
     # @see #collect_urls
@@ -21,7 +22,7 @@ module SiteMapper
       new(base_url).collect_urls { |url| yield(url) }
     end
 
-    # Collects all links on domain for domain
+    # Collects all links on domain for domain.
     # @return [Array] with links.
     # @example URLs for example.com
     #   crawler = Crawler.new('example.com')
@@ -52,12 +53,13 @@ module SiteMapper
       link_elements = Request.get_page(get_url).css('a') rescue []
       @processed << get_url
       link_elements.each do |page_link|
-        absolute_url = @crawl_url.absolute_url_from(page_link.attr('href'), get_url)
-        if absolute_url
-          url = resolve(absolute_url)
-          @fetch_queue << url unless @processed.include?(url)
-        end
+        url = @crawl_url.absolute_url_from(page_link.attr('href'), get_url)
+        @fetch_queue << url if url && eligible_for_queue?(resolve(url))
       end
+    end
+
+    def eligible_for_queue?(url)
+      @robots.allowed?(url) && !@processed.include?(url)
     end
 
     def resolve(url)
