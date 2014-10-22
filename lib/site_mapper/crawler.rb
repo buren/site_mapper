@@ -17,14 +17,26 @@ module SiteMapper
       @fetch_queue << @crawl_url.resolved_base_url
     end
 
+    # @see #collect_urls
     def self.collect_urls(base_url)
-      new(base_url).collect_urls
+      new(base_url).collect_urls { |url| yield(url) }
     end
 
+    # Collects all links on domain for domain
+    # @return [Array] with links.
+    # @example URLs for example.com
+    #   crawler = Crawler.new('example.com')
+    #   crawler.collect_urls
+    # @example URLs for example.com with block
+    #   crawler = Crawler.new('example.com')
+    #   crawler.collect_urls do |new_url|
+    #     puts "New URL found: #{new_url}"
+    #   end
     def collect_urls
       until @fetch_queue.empty?
         url = @fetch_queue.first
         @fetch_queue.delete(@fetch_queue.first)
+        Thread.new { yield(url) if block_given? }
         page_links(url)
       end
       puts "Crawling finished, #{@processed.length} links found"
@@ -43,8 +55,8 @@ module SiteMapper
       link_elements.each do |page_link|
         absolute_url = @crawl_url.absolute_url_from(page_link.attr('href'), get_url)
         if absolute_url
-          resolved_url = resolve(absolute_url)
-          @fetch_queue << resolved_url if !@processed.include?(resolved_url)
+          url = resolve(absolute_url)
+          @fetch_queue << url unless @processed.include?(url)
         end
       end
     end

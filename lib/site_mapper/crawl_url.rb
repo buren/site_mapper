@@ -1,4 +1,5 @@
 module SiteMapper
+  # Crawl URL formatter
   class CrawlUrl
     attr_reader :resolved_base_url, :base_hostname
 
@@ -8,6 +9,14 @@ module SiteMapper
       @resolved_base_url.prepend('http://') unless @resolved_base_url.start_with?('http')
     end
 
+    # Given a link it constructs the absolute path,
+    # if valid URL & URL has same domain as @resolved_base_url.
+    # @return [String] with absolute path to resource.
+    # @param [String, String] raw_url from link element and current page URL
+    # @example Construct absolute URL for '/path', example.com
+    #   cu = CrawlUrl.new('example.com')
+    #   cu.absolute_url_from('/path', 'example.com/some/path')
+    #   # => http://example.com/some/path
     def absolute_url_from(raw_url, get_url)
       return nil unless eligible_url?(raw_url)
       parsed_url = URI.parse(raw_url) rescue URI.parse('')  

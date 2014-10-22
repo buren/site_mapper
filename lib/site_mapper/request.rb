@@ -3,7 +3,7 @@ require 'url_resolver' # TODO: Allow users to use any resolver
 module SiteMapper
   class Request
     INFO_LINK  = 'https://rubygems.org/gems/site_mapper'
-    USER_AGENT = "SiteMapper/#{VERSION} (+#{INFO_LINK})"
+    USER_AGENT = "SiteMapper/#{SiteMapper::VERSION} (+#{INFO_LINK})"
 
     class << self
       def get_page(url, document_type = :html)
