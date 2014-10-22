@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'site_mapper'
+
+url = ARGV[0]
+SiteMapper.map(url)
