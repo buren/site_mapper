@@ -50,9 +50,10 @@ module SiteMapper
       # @example Resolve google.com
       #    resolve_url('google.com')
       #    # => 'https://www.google.com'
-      def resolve_url(url, with_query: true)
+      def resolve_url(url, options = {})
+        options  = { with_query: true }.merge(options)
         resolved = UrlResolver.resolve(url)
-        resolved = remove_query(resolved) unless with_query
+        resolved = remove_query(resolved) unless options[:with_query]
         resolved
       end
 

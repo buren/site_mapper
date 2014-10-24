@@ -1,6 +1,6 @@
 # SiteMapper
 [![Code Climate](https://codeclimate.com/github/buren/site_mapper.png)](https://codeclimate.com/github/buren/site_mapper) 
- [![Gem Version](https://badge.fury.io/rb/site_mapper.svg)](http://badge.fury.io/rb/site_mapper) [![Build Status](https://travis-ci.org/buren/site_mapper.svg?branch=master)](https://travis-ci.org/buren/site_mapper) [![Dependency Status](https://gemnasium.com/buren/site_mapper.svg)](https://gemnasium.com/buren/site_mapper)
+ [![Gem Version](https://badge.fury.io/rb/site_mapper.svg)](http://badge.fury.io/rb/site_mapper) [![Build Status](https://travis-ci.org/buren/site_mapper.svg?branch=master)](https://travis-ci.org/buren/site_mapper) [![Dependency Status](https://gemnasium.com/buren/site_mapper.svg)](https://gemnasium.com/buren/site_mapper) [![Coverage Status](https://img.shields.io/coveralls/buren/site_mapper.svg)](https://coveralls.io/r/buren/site_mapper)
 
 Map all links on a given site.  
 SiteMapper will try to respect `/robots.txt`

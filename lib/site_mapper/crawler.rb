@@ -6,9 +6,9 @@ module SiteMapper
   class Crawler
     # @param [String] url base url for crawler
     # @param [Hash] resolve (optional false by default)
-    def initialize(url, resolve: false)
-      @base_url     = Request.resolve_url(url)
-      @options     = { resolve: resolve }
+    def initialize(url, options = {})
+      @base_url    = Request.resolve_url(url)
+      @options     = { resolve: false }.merge(options)
       @crawl_url   = CrawlUrl.new(@base_url)
       @fetch_queue = CrawlQueue.new
       @processed   = Set.new
