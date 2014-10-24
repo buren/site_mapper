@@ -3,4 +3,4 @@
 require 'site_mapper'
 
 url = ARGV[0]
-SiteMapper.map(url)
+SiteMapper.map(url, logger: :system)

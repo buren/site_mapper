@@ -37,7 +37,7 @@ module SiteMapper
       end
 
       # Get response body, rescues with nil if an exception is raised.
-      # @see #get_response
+      # @see Request#get_response
       def get_response_body(*args)
         get_response(*args).body rescue nil
       end

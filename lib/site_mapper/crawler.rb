@@ -37,17 +37,17 @@ module SiteMapper
         yield(url)
         page_links(url)
       end
-      puts "Crawling finished, #{@processed.length} links found"
+      Logger.log "Crawling finished, #{@processed.length} links found"
       @processed.to_a
     rescue Interrupt, IRB::Abort
-      puts 'Crawl interrupted.'
+      Logger.err_log 'Crawl interrupted.'
       @fetch_queue.to_a
     end
 
     private
 
     def page_links(get_url)
-      puts "Queue length: #{@fetch_queue.length}, Parsing: #{get_url}"
+      Logger.log "Queue length: #{@fetch_queue.length}, Parsing: #{get_url}"
       link_elements = Request.get_page(get_url).css('a') rescue []
       @processed << get_url
       link_elements.each do |page_link|
