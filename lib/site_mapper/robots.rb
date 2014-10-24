@@ -1,5 +1,5 @@
-# Based on: https://rubygems.org/gems/robots, v0.10.1
 module SiteMapper
+  # Based on: https://rubygems.org/gems/robots, v0.10.1
   # Provided a base URL it checks whether a given URL is
   # allowed to be crawled according to /robots.txt.
   # @see https://rubygems.org/gems/robots
@@ -114,7 +114,9 @@ module SiteMapper
       end
     end
 
-    # @param [String] url to fetch /robots.txt from
+    # @param [String] robots_txt contents of /robots.txt
+    # @param [String] hostname for the passed robots_txt
+    # @param [String] user_agent to check
     def initialize(robots_txt, hostname, user_agent)
       @robots_txt = robots_txt
       @hostname   = hostname

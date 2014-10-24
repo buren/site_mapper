@@ -5,7 +5,7 @@ module SiteMapper
   # Crawls a given site.
   class Crawler
     # @param [String] url base url for crawler
-    # @param [Hash] resolve (optional false by default)
+    # @param [Hash] options hash, resolve key (optional false by default)
     def initialize(url, options = {})
       @base_url    = Request.resolve_url(url)
       @options     = { resolve: false }.merge(options)
@@ -70,25 +70,25 @@ module SiteMapper
     def resolve(url)
       @options[:resolve] ? Request.resolve_url(url) : url
     end
-  end
 
-  # Queue of urls to be crawled.
-  class CrawlQueue
-    # @return [Set] that exends EnumerablePop module
-    def self.new
-      Set.new.extend(EnumerablePop)
-    end
-    
-    # Add pop method when added to class.
-    # The class that extends this module need to implement #first and #delete.
-    module EnumerablePop
-      # Pop first element from list.
-      # @return [Object] the first object in the list or nil
-      def pop
-        first_element = first
-        delete(first_element)
-        first_element
+    # Queue of urls to be crawled.
+    class CrawlQueue
+      # @return [Set] that exends EnumerablePop module
+      def self.new
+        Set.new.extend(EnumerablePop)
+      end
+      
+      # Add pop method when added to class.
+      # The class that extends this module need to implement #first and #delete.
+      module EnumerablePop
+        # Pop first element from list.
+        # @return [Object] the first object in the list or nil
+        def pop
+          first_element = first
+          delete(first_element)
+          first_element
+        end
       end
     end
-  end
+  end  
 end

@@ -45,7 +45,7 @@ module SiteMapper
       # Resolve an URL string and follows redirects.
       # if the URL can't be resolved the original URL is returned.
       # @param [String] url
-      # @param [Boolean] with_query (optional and true by default)
+      # @param [Hash] options hash, with_query key (optional and true by default)
       # @return [String] a URL string that potentially is a redirected URL
       # @example Resolve google.com
       #    resolve_url('google.com')
