@@ -1,3 +1,4 @@
 module SiteMapper
-  VERSION = '0.0.8'
+  # Gem version
+  VERSION = '0.0.9'
 end

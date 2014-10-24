@@ -3,6 +3,7 @@ module SiteMapper
   class CrawlUrl
     attr_reader :resolved_base_url, :base_hostname
 
+    # @param [String] base_url
     def initialize(base_url)
       @resolved_base_url = Request.resolve_url(base_url, with_query: false)
       @base_hostname     = URI.parse(@resolved_base_url).hostname
@@ -11,8 +12,9 @@ module SiteMapper
 
     # Given a link it constructs the absolute path,
     # if valid URL & URL has same domain as @resolved_base_url.
+    # @param [String] raw_url url found on page
+    # @param [String] get_url current page url
     # @return [String] with absolute path to resource
-    # @param [String, String] raw_url from link element and current page URL
     # @example Construct absolute URL for '/path', example.com
     #   cu = CrawlUrl.new('example.com')
     #   cu.absolute_url_from('/path', 'example.com/some/path')

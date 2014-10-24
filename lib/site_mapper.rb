@@ -9,12 +9,17 @@ require 'site_mapper/crawl_url'
 
 # Find all links on domain to domain
 module SiteMapper
-  # Returns all links found on domain to domain.
+  # SiteMapper info link
+  INFO_LINK  = 'https://rubygems.org/gems/site_mapper'
+  # SiteMapper User-Agent
+  USER_AGENT = "SiteMapper/#{SiteMapper::VERSION} (+#{INFO_LINK})"
+
+  # Map all links on a given site.
   # @return [Array] with links.
   # @param [String] link to domain
   # @example Collect all URLs from example.com
   #   SiteMapper.map('example.com')
-  def self.map(source)
-    Crawler.collect_urls(source) { |url| yield(url) if block_given? }
+  def self.map(link)
+    Crawler.collect_urls(link) { |url| yield(url) if block_given? }
   end
 end

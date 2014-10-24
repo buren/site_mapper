@@ -1,7 +1,7 @@
 # Based on: https://rubygems.org/gems/robots, v0.10.1
 module SiteMapper
   # Provided a base URL it checks whether a given URL is
-  # allowed to be crawled according to /robots.txt
+  # allowed to be crawled according to /robots.txt.
   # @see https://rubygems.org/gems/robots
   class Robots
     # Parses robots.txt
@@ -11,10 +11,12 @@ module SiteMapper
         @disallows = {}
         @allows    = {}
         @delays    = {}
+        @sitemaps  = []
         parse(body)
       end
 
       # Parse robots.txt body.
+      # @param [String] body the webpage body HTML
       def parse(body)
         agent = /.*/
         body  = body || "User-agent: *\nAllow: /\n"
@@ -36,6 +38,8 @@ module SiteMapper
             @disallows[agent] << to_regex(value)
           when 'crawl-delay'
             @delays[agent] = value.to_i
+          when 'sitemap'
+            @sitemaps << value
           else
             @other[key] ||= []
             @other[key] << value
@@ -43,15 +47,20 @@ module SiteMapper
         end
         @parsed = true
       end
-      
+
+      # @param [URI] uri to be checked
+      # @param [String] user_agent to be checked
       # @return [Boolean] true if uri is allowed to be crawled
       # @example Check if http://www.google.com/googlesites is allowed to be crawled
       #    uri = URI.parse('http://www.google.com/googlesites')
-      #    robots.allowed?(uri, 'SiteMapper') # => false (as of 2014-10-22)
+      #    robots.allowed?(uri, 'SiteMapper')
+      #    # => false (as of 2014-10-22)
       def allowed?(uri, user_agent)
         return true unless @parsed
         allowed = true
         path    = uri.request_uri
+
+        user_agent.downcase!
         
         @disallows.each do |key, value|
           if user_agent =~ key
@@ -76,10 +85,23 @@ module SiteMapper
         end
         allowed
       end
+
+      # @param [String] user_agent
+      # @return [Integer] crawl delay for user_agent
+      def crawl_delay(user_agent)
+        agent = user_agent.dup
+        agent = to_regex(agent.downcase) if user_agent.is_a?(String)
+        @delays[agent]
+      end
       
       # @return [Hash] key/value pairs from robots.txt
       def other_values
         @other
+      end
+
+      # @return [Array] returns sitemaps defined in robots.txt
+      def sitemaps
+        @sitemaps
       end
         
       protected
@@ -92,12 +114,15 @@ module SiteMapper
       end
     end
 
-    def initialize(url, user_agent)
+    # @param [String] url to fetch /robots.txt from
+    def initialize(robots_txt, hostname, user_agent)
+      @robots_txt = robots_txt
+      @hostname   = hostname
       @user_agent = user_agent
       @parsed     = {}
-      @robots_txt = Request.get_response_body("#{url}/robots.txt", true)
     end
     
+    # @param [String, URI] uri String or URI to check
     # @return [Boolean] true if uri is allowed to be crawled
     # @example Check if http://www.google.com/googlesites is allowed to be crawled
     #    robots = Robots.new('google.com', 'SiteMapper')
@@ -116,22 +141,24 @@ module SiteMapper
     #    robots = Robots.new('google.com', 'SiteMapper')
     #    robots.sitemaps
     def sitemaps
-      uri    = to_uri(uri)
-      values = other_values(uri.host)
-      values['sitemap'] or []
+      host = @hostname
+      @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
+      @parsed[host].sitemaps
     rescue
       []
     end
     
+    # @param [String, URI] uri String or URI get other_values from
     # @return [Hash] key/value pairs from robots.txt
     # @example Get other values for google.com
     #    robots = Robots.new('google.com', 'SiteMapper')
     #    robots.other_values
-    def other_values(uri)
-      uri  = to_uri(uri)
-      host = uri.host
+    def other_values
+      host = @hostname
       @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
       @parsed[host].other_values
+    rescue
+      {}
     end
 
     private 

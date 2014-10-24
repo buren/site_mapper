@@ -2,19 +2,17 @@ require 'set'
 require 'nokogiri'
 
 module SiteMapper
+  # Crawls a given site.
   class Crawler
-    CRAWLER_INFO_LINK = 'https://rubygems.org/gems/wayback_archiver'
-    HEADERS_HASH      = {
-      'User-Agent' => "SiteMapper/#{SiteMapper::VERSION} (+#{CRAWLER_INFO_LINK})"
-    }
-
+    # @param [String] url base url for crawler
+    # @param [Hash] resolve (optional false by default)
     def initialize(url, resolve: false)
-      base_url     = Request.resolve_url(url)
+      @base_url     = Request.resolve_url(url)
       @options     = { resolve: resolve }
-      @crawl_url   = CrawlUrl.new(base_url)
+      @crawl_url   = CrawlUrl.new(@base_url)
       @fetch_queue = CrawlQueue.new
       @processed   = Set.new
-      @robots      = Robots.new(base_url, HEADERS_HASH['User-Agent'])
+      @robots      = nil
     end
 
     # @see #collect_urls
@@ -59,7 +57,14 @@ module SiteMapper
     end
 
     def eligible_for_queue?(url)
-      @robots.allowed?(url) && !@processed.include?(url)
+      robots.allowed?(url) && !@processed.include?(url)
+    end
+
+    def robots
+      return @robots unless @robots.nil?
+      robots_body  = Request.get_response_body("#{@base_url}/robots.txt")
+      @robots      = Robots.new(robots_body, URI.parse(@base_url).host, SiteMapper::USER_AGENT)
+      @robots
     end
 
     def resolve(url)
@@ -67,12 +72,18 @@ module SiteMapper
     end
   end
 
+  # Queue of urls to be crawled.
   class CrawlQueue
+    # @return [Set] that exends EnumerablePop module
     def self.new
       Set.new.extend(EnumerablePop)
     end
     
+    # Add pop method when added to class.
+    # The class that extends this module need to implement #first and #delete.
     module EnumerablePop
+      # Pop first element from list.
+      # @return [Object] the first object in the list or nil
       def pop
         first_element = first
         delete(first_element)
