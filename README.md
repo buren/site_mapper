@@ -44,6 +44,17 @@ SiteMapper.map('example.com', logger: :system) do |new_url|
 end
 ```
 
+## Docs
+
+You can find the docs online on [RubyDoc](http://www.rubydoc.info/github/buren/site_mapper/master).
+
+This gem is documented using `yard` (run from the root of this respository).
+
+```bash
+yard # Generates documentation to doc/
+```
+
+
 ## Contributing
 
 Contributions, feedback and suggestions are very welcome.
@@ -57,6 +68,13 @@ Contributions, feedback and suggestions are very welcome.
 ## Notes
 
 * Special thanks to the [robots](https://rubygems.org/gems/robots) gem, which provided the bulk of the code in `lib/robots.rb`
+
+## Alternatives
+
+There are a couple of __great__ alternatives, which are more mature and has more features than this Gem and has. Please feel free to check them out:
+
+* [spidr](https://github.com/postmodern/spidr#readme)
+* [anemone](https://github.com/chriskite/anemone#readme)
 
 ## License
 
