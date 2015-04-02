@@ -134,8 +134,6 @@ module SiteMapper
       host = uri.host
       @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
       @parsed[host].allowed?(uri, @user_agent)
-    rescue
-      true
     end
 
     # @return [Array] array of sitemaps defined in robots.txt
@@ -146,8 +144,6 @@ module SiteMapper
       host = @hostname
       @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
       @parsed[host].sitemaps
-    rescue
-      []
     end
     
     # @param [String, URI] uri String or URI get other_values from
@@ -159,8 +155,6 @@ module SiteMapper
       host = @hostname
       @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
       @parsed[host].other_values
-    rescue
-      {}
     end
 
     private 

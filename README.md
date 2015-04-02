@@ -1,10 +1,11 @@
 # SiteMapper
 
 [![Code Climate](https://codeclimate.com/github/buren/site_mapper.png)](https://codeclimate.com/github/buren/site_mapper)
-[![Gem Version](https://badge.fury.io/rb/site_mapper.svg)](http://badge.fury.io/rb/site_mapper)
+[![Coverage Status](https://img.shields.io/coveralls/buren/site_mapper.svg)](https://coveralls.io/r/buren/site_mapper)
+[![Docs badge](https://inch-ci.org/github/buren/site_mapper.svg?branch=master)](http://www.rubydoc.info/github/buren/site_mapper/master)
 [![Build Status](https://travis-ci.org/buren/site_mapper.svg?branch=master)](https://travis-ci.org/buren/site_mapper)
 [![Dependency Status](https://gemnasium.com/buren/site_mapper.svg)](https://gemnasium.com/buren/site_mapper)
-[![Coverage Status](https://img.shields.io/coveralls/buren/site_mapper.svg)](https://coveralls.io/r/buren/site_mapper)
+[![Gem Version](https://badge.fury.io/rb/site_mapper.svg)](http://badge.fury.io/rb/site_mapper)
 
 Map all links on a given site.  
 SiteMapper will try to respect `/robots.txt`
@@ -45,6 +46,8 @@ end
 
 ## Contributing
 
+Contributions, feedback and suggestions are very welcome.
+
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
@@ -54,3 +57,7 @@ end
 ## Notes
 
 * Special thanks to the [robots](https://rubygems.org/gems/robots) gem, which provided the bulk of the code in `lib/robots.rb`
+
+## License
+
+[MIT License](LICENSE)

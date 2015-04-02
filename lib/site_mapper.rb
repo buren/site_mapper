@@ -20,10 +20,19 @@ module SiteMapper
   # @param [String] link to domain
   # @param [Hash] options hash
   # @example Collect all URLs from example.com
-  #   SiteMapper.map('example.com')
+  #    SiteMapper.map('example.com')
+  # @example Collect all URLs from example.com with custom User-agent
+  #    SiteMapper.map('example.com', user_agent: 'MyUserAgent')
+  # @example Collect all URLs from example.com with custom logger class
+  #    class MyLogger
+  #      def self.log(msg);     puts msg;end
+  #      def self.err_log(msg); puts msg;end
+  #    end
+  #    SiteMapper.map('example.com', logger: MyLogger)
   def self.map(link, options = {})
-    set_logger(options[:logger])
-    Crawler.collect_urls(link) { |url| yield(url) if block_given? }
+    set_logger(options.delete(:logger))
+    options = { user_agent: USER_AGENT }.merge(options)
+    Crawler.collect_urls(link, options) { |url| yield(url) if block_given? }
   end
 
   # Set logger.

@@ -3,11 +3,16 @@ module SiteMapper
   class CrawlUrl
     attr_reader :resolved_base_url, :base_hostname
 
+    # Too many request error message
+    TOO_MANY_REQUEST_MSG = "You're being challenged with a 'too many requests' captcha"
+
     # @param [String] base_url
     def initialize(base_url)
-      @resolved_base_url = Request.resolve_url(base_url, with_query: false)
+      uri      = URI.parse(Request.resolve_url(base_url))
+      host     = uri.hostname
+      protocol = uri.port == 443 ? 'https://' : 'http://'
+      @resolved_base_url = "#{protocol}#{host}"
       @base_hostname     = URI.parse(@resolved_base_url).hostname
-      @resolved_base_url.prepend('http://') unless @resolved_base_url.start_with?('http')
     end
 
     # Given a link it constructs the absolute path,
@@ -20,11 +25,11 @@ module SiteMapper
     #   cu.absolute_url_from('/path', 'example.com/some/path')
     #   # => http://example.com/some/path
     def absolute_url_from(raw_url, get_url)
-      return nil unless eligible_url?(raw_url)
-      parsed_url = URI.parse(raw_url) rescue URI.parse('')  
-      if parsed_url.relative?
+      return unless eligible_url?(raw_url)
+      parsed_url = URI.parse(raw_url) rescue false
+      if parsed_url && parsed_url.relative?
         url_from_relative(raw_url, get_url)
-      elsif same_domain?(raw_url, @resolved_base_url)
+      elsif parsed_url && same_domain?(raw_url, @resolved_base_url)
         raw_url
       else
         nil
@@ -70,8 +75,10 @@ module SiteMapper
       return false if href.nil? || href.empty?
       dont_start   = %w(javascript: callto: mailto: tel: skype: facetime: wtai: #)
       dont_include = %w(/email-protection#)
+      err_include  = %w(/sorry/IndexRedirect?)
       dont_end     = %w(.zip .rar .pdf .exe .dmg .pkg .dpkg .bat)
 
+      err_include.each  { |pattern| fail TOO_MANY_REQUEST_MSG if href.include?(pattern) }
       dont_start.each   { |pattern| return false if href.start_with?(pattern) }      
       dont_include.each { |pattern| return false if href.include?(pattern) }
       dont_end.each     { |pattern| return false if href.end_with?(pattern) }

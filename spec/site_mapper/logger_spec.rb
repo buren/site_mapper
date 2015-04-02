@@ -7,7 +7,7 @@ end
 
 describe SiteMapper::Logger do
   before(:all)        { SiteMapper::Logger.use_logger(TestLogger) }
-  
+
   let(:logger)        { SiteMapper::Logger }
   let(:system_logger) { SiteMapper::Logger::SystemOutLogger }
   let(:nil_logger)    { SiteMapper::Logger::NilLogger }
