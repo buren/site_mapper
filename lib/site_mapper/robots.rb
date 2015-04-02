@@ -6,6 +6,7 @@ module SiteMapper
   class Robots
     # Parses robots.txt
     class ParsedRobots
+      # Initializes ParsedRobots
       def initialize(body, user_agent)
         @other     = {}
         @disallows = {}
@@ -61,7 +62,7 @@ module SiteMapper
         path    = uri.request_uri
 
         user_agent.downcase!
-        
+
         @disallows.each do |key, value|
           if user_agent =~ key
             value.each do |rule|
@@ -71,9 +72,9 @@ module SiteMapper
             end
           end
         end
-        
+
         @allows.each do |key, value|
-          unless allowed      
+          unless allowed
             if user_agent =~ key
               value.each do |rule|
                 if path =~ rule
@@ -93,7 +94,8 @@ module SiteMapper
         agent = to_regex(agent.downcase) if user_agent.is_a?(String)
         @delays[agent]
       end
-      
+
+      # Return key/value paris with unknown meaning.
       # @return [Hash] key/value pairs from robots.txt
       def other_values
         @other
@@ -103,9 +105,9 @@ module SiteMapper
       def sitemaps
         @sitemaps
       end
-        
+
       protected
-      
+
       def to_regex(pattern)
         return /should-not-match-anything-123456789/ if pattern.strip.empty?
         pattern = Regexp.escape(pattern)
@@ -123,7 +125,7 @@ module SiteMapper
       @user_agent = user_agent
       @parsed     = {}
     end
-    
+
     # @param [String, URI] uri String or URI to check
     # @return [Boolean] true if uri is allowed to be crawled
     # @example Check if http://www.google.com/googlesites is allowed to be crawled
@@ -145,7 +147,7 @@ module SiteMapper
       @parsed[host] ||= ParsedRobots.new(@robots_txt, @user_agent)
       @parsed[host].sitemaps
     end
-    
+
     # @param [String, URI] uri String or URI get other_values from
     # @return [Hash] key/value pairs from robots.txt
     # @example Get other values for google.com
@@ -157,8 +159,8 @@ module SiteMapper
       @parsed[host].other_values
     end
 
-    private 
-    
+    private
+
     def to_uri(uri)
       uri = URI.parse(uri.to_s) unless uri.is_a?(URI)
       uri

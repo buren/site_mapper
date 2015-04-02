@@ -6,7 +6,10 @@ module SiteMapper
     # Too many request error message
     TOO_MANY_REQUEST_MSG = "You're being challenged with a 'too many requests' captcha"
 
+    # Initialize CrawlUrl
     # @param [String] base_url
+    # @example Intitialize CrawlUrl with example.com as base_url
+    #   CrawlUrl.new('example.com')
     def initialize(base_url)
       uri      = URI.parse(Request.resolve_url(base_url))
       host     = uri.hostname
