@@ -108,6 +108,8 @@ module SiteMapper
 
       protected
 
+      # @return [Regex] regex from pattern
+      # @param [String] pattern to compile to Regex
       def to_regex(pattern)
         return /should-not-match-anything-123456789/ if pattern.strip.empty?
         pattern = Regexp.escape(pattern)

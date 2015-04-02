@@ -32,6 +32,8 @@ module SiteMapper
       @robots      = nil
     end
 
+    # See documentation for the instance variant of this method.
+    # @return [Array] with links.
     # @see #collect_urls
     def self.collect_urls(*args)
       new(*args).collect_urls { |url| yield(url) }
