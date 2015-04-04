@@ -20,7 +20,6 @@ module SiteMapper
 
     # Choose what logger to use.
     # @return [Object] returns logger.
-    # @param [Symbol] type of logger class to be used
     # @param [Class, #log, #err_log] logger a logger class
     def self.use_logger(logger)
       fail 'Logger already set' if defined?(@@log)

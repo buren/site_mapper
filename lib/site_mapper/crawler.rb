@@ -8,7 +8,7 @@ module SiteMapper
     OPTIONS = {
       resolve:      false,
       sleep_length: 0.5,
-      max_requests:  Float::INFINITY
+      max_requests: Float::INFINITY
     }
 
     # @param [String] url base url for crawler
@@ -54,7 +54,7 @@ module SiteMapper
       until @fetch_queue.empty? || @processed.length >= @options[:max_requests]
         url = @fetch_queue.pop
         yield(url)
-        page_links(url)
+        page_urls_for(url)
       end
       result = @processed + @fetch_queue
       Logger.log "Crawling finished:"
@@ -68,13 +68,13 @@ module SiteMapper
 
     private
 
-    def page_links(get_url)
-      Logger.log "Queue length: #{@fetch_queue.length}, Parsing: #{get_url}"
-      link_elements = Request.document(get_url, user_agent: @options[:user_agent]).css('a')
+    def page_urls_for(current_url)
+      Logger.log "Queue length: #{@fetch_queue.length}, Parsing: #{current_url}"
+      link_elements = Request.document(current_url, user_agent: @options[:user_agent]).css('a')
       wait
-      @processed << get_url
+      @processed << current_url
       link_elements.each do |page_link|
-        url = @crawl_url.absolute_url_from(page_link.attr('href'), get_url)
+        url = @crawl_url.absolute_url_from(page_link.attr('href'), current_url)
         @fetch_queue << url if url && eligible_for_queue?(resolve(url))
       end
     end
