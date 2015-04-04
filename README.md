@@ -54,7 +54,6 @@ This gem is documented using `yard` (run from the root of this respository).
 yard # Generates documentation to doc/
 ```
 
-
 ## Contributing
 
 Contributions, feedback and suggestions are very welcome.

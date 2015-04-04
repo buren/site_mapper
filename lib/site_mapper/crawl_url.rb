@@ -11,7 +11,7 @@ module SiteMapper
     # @example Intitialize CrawlUrl with example.com as base_url
     #   CrawlUrl.new('example.com')
     def initialize(base_url)
-      @resolved_base_url = Request.resolve_url(base_url) # "#{protocol}#{host}"
+      @resolved_base_url = Request.resolve_url(base_url)
       @base_hostname     = URI.parse(@resolved_base_url).hostname
     end
 

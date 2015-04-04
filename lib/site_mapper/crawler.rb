@@ -6,18 +6,14 @@ module SiteMapper
   class Crawler
     # Default options
     OPTIONS = {
-      resolve:      false,
       sleep_length: 0.5,
       max_requests: Float::INFINITY
     }
 
     # @param [String] url base url for crawler
-    # @param [Hash] options hash, resolve key (optional false by default)
-    # add user_agent key to specify custom User-agent
-    # @example Create crawler with custom User-agent
+    # @param [Hash] options hash
+    # @example Create crawler with custom User-Agent
     #    Crawler.new('example.com', user_agent: 'MyUserAgent')
-    # @example Create crawler and resolve all urls
-    #    Crawler.new('example.com', resolve: true)
     # @example Create crawler and sleep 1 second between each request
     #    Crawler.new('example.com', sleep_length: 1)
     # @example Create crawler and perform max 3 requests
@@ -75,7 +71,7 @@ module SiteMapper
       @processed << current_url
       link_elements.each do |page_link|
         url = @crawl_url.absolute_url_from(page_link.attr('href'), current_url)
-        @fetch_queue << url if url && eligible_for_queue?(resolve(url))
+        @fetch_queue << url if url && eligible_for_queue?(url)
       end
     end
 
@@ -85,13 +81,10 @@ module SiteMapper
 
     def robots
       return @robots unless @robots.nil?
-      robots_body  = Request.response_body("#{@base_url}/robots.txt", user_agent: @options[:user_agent])
-      @robots      = Robots.new(robots_body, URI.parse(@base_url).host, SiteMapper::USER_AGENT)
+      robots_url  = URI.join(@base_url, '/robots.txt').to_s
+      robots_body = Request.response_body(robots_url, user_agent: @options[:user_agent])
+      @robots     = Robots.new(robots_body, URI.parse(@base_url).host, @options[:user_agent])
       @robots
-    end
-
-    def resolve(url)
-      @options[:resolve] ? Request.resolve_url(url) : url
     end
 
     def wait
@@ -100,7 +93,7 @@ module SiteMapper
 
     # Queue of urls to be crawled.
     class CrawlQueue
-      # @return [Set] that exends EnumerablePop module
+      # @return [Set] that extends EnumerablePop module
       def self.new
         Set.new.extend(EnumerablePop)
       end

@@ -45,13 +45,13 @@ module SiteMapper
       # Log to STDOUT
       # @param [String] msg to be logged to STDOUT
       def self.log(msg)
-        STDOUT.puts(msg)
+        $stdout.puts(msg)
       end
 
       # Log to STDERR
       # @param [String] msg to be logged to STDERR
       def self.err_log(msg)
-        STDERR.puts("[ERROR] #{msg}")
+        $stderr.puts("[ERROR] #{msg}")
       end
     end
 
