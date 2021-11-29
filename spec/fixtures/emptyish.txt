@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Other-key: 4
